@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Saya</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #667eea;
+    }
+
+    button {
+      grid-column: span 2;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #667eea;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    .preview {
+      text-align: center;
+    }
+
+    .preview img {
+      width: 100px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #667eea;
+      color: white;
+    }
+
+    tr:hover {
+      background: #f1f1f1;
+    }
+
+    a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>💼 Portfolio Saya</h1>
+
+  <form id="portfolioForm">
+    <input type="text" id="judul" placeholder="Judul Project" required>
+    <input type="text" id="deskripsi" placeholder="Deskripsi" required>
+    <input type="number" id="tahun" placeholder="Tahun" required>
+    <input type="url" id="link" placeholder="Link Project">
+    <input type="file" id="gambar" accept="image/*">
+
+    <button type="submit">Tambah Project</button>
+  </form>
+
+  <div class="preview">
+    <p>Preview Gambar:</p>
+    <img id="previewImg" src="" alt="Tidak ada preview">
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Gambar</th>
+        <th>Judul</th>
+        <th>Deskripsi</th>
+        <th>Tahun</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<script>
+  const form = document.getElementById("portfolioForm");
+  const tableBody = document.getElementById("tableBody");
+  const previewImg = document.getElementById("previewImg");
+
+  let projects = [];
+
+  // Preview gambar
+  document.getElementById("gambar").addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      previewImg.src = URL.createObjectURL(file);
+    }
+  });
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const judul = document.getElementById("judul").value;
+    const deskripsi = document.getElementById("deskripsi").value;
+    const tahun = document.getElementById("tahun").value;
+    const link = document.getElementById("link").value;
+    const gambarFile = document.getElementById("gambar").files[0];
+
+    const gambarURL = gambarFile ? URL.createObjectURL(gambarFile) : "";
+
+    const project = {
+      judul,
+      deskripsi,
+      tahun,
+      link,
+      gambar: gambarURL
+    };
+
+    projects.push(project);
+    renderTable();
+
+    form.reset();
+    previewImg.src = "";
+  });
+
+  function renderTable() {
+    tableBody.innerHTML = "";
+
+    projects.forEach((p, index) => {
+      const row = `
+        <tr>
+          <td>${index + 1}</td>
+          <td><img src="${p.gambar}" width="60"></td>
+          <td>${p.judul}</td>
+          <td>${p.deskripsi}</td>
+          <td>${p.tahun}</td>
+          <td><a href="${p.link}" target="_blank">Lihat</a></td>
+        </tr>
+      `;
+      tableBody.innerHTML += row;
+    });
+  }
+</script>
+
+</body>
+</html>
